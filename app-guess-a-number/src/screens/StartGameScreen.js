@@ -9,11 +9,18 @@ import {
   Alert,
 } from "react-native";
 
-import { Card, Input, NumberContainer } from "../components";
+import {
+  BodyText,
+  Card,
+  Input,
+  MainButton,
+  NumberContainer,
+  TitleText,
+} from "../components";
 
 import { colors } from "../constants";
 
-export function StartGameScreen() {
+export function StartGameScreen({ onStartGame }) {
   const [enteredValue, setEnteredValue] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
@@ -52,7 +59,9 @@ export function StartGameScreen() {
       <Card style={styles.summaryContainer}>
         <Text>You selected</Text>
         <NumberContainer>{selectedNumber}</NumberContainer>
-        <Button title="START GAME" />
+        <MainButton onPress={() => onStartGame(selectedNumber)}>
+          START GAME
+        </MainButton>
       </Card>
     );
   }
@@ -65,9 +74,9 @@ export function StartGameScreen() {
       }}
     >
       <View style={styles.screen}>
-        <Text style={styles.title}>Start a New Game!</Text>
+        <TitleText style={styles.title}>Start a New Game!</TitleText>
         <Card style={styles.inputContainer}>
-          <Text>Select a Number</Text>
+          <BodyText>Select a Number</BodyText>
           <Input
             style={styles.input}
             blurOnSubmit
@@ -110,6 +119,7 @@ const styles = StyleSheet.create({
   title: {
     marginVertical: 10,
     fontSize: 20,
+    fontFamily: "open-sans-bold",
   },
   inputContainer: {
     width: 300,
