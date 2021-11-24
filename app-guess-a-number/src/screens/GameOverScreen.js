@@ -1,29 +1,80 @@
-import React from "react";
-import { Button, StyleSheet, View, Image, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 
 import { TitleText, BodyText, MainButton } from "../components";
 import { colors } from "../constants";
 
 export function GameOverScreen({ roundsNumber, userNumber, onRestart }) {
+  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+    Dimensions.get("window").width
+  );
+  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+    Dimensions.get("window").height
+  );
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvailableDeviceWidth(Dimensions.get("window").width);
+      setAvailableDeviceHeight(Dimensions.get("window").height);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  });
+
   return (
-    <View style={styles.screen}>
-      <TitleText>The Game is Over!</TitleText>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../assets/success.png")}
-          style={styles.image}
-          resizeMode="cover"
-        />
+    <ScrollView>
+      <View style={styles.screen}>
+        <TitleText>The Game is Over!</TitleText>
+        <View
+          style={{
+            ...styles.imageContainer,
+            ...{
+              width: availableDeviceWidth * 0.7,
+              height: availableDeviceWidth * 0.7,
+              borderRadius: (availableDeviceWidth * 0.7) / 2,
+              marginVertical: availableDeviceHeight / 30,
+            },
+          }}
+        >
+          <Image
+            source={require("../../assets/success.png")}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </View>
+        <View
+          style={{
+            ...styles.resultContainer,
+            ...{ marginVertical: availableDeviceHeight / 60 },
+          }}
+        >
+          <BodyText
+            style={{
+              ...styles.resultText,
+              ...{
+                fontSize: availableDeviceHeight < 400 ? 16 : 20,
+              },
+            }}
+          >
+            Your phone needed{" "}
+            <Text style={styles.highlight}>{roundsNumber}</Text> rounds to guess
+            the number <Text style={styles.highlight}>{userNumber}</Text>.
+          </BodyText>
+        </View>
+        <MainButton onPress={onRestart}>NEW GAME</MainButton>
       </View>
-      <View style={styles.resultContainer}>
-        <BodyText style={styles.resultText}>
-          Your phone needed <Text style={styles.highlight}>{roundsNumber}</Text>{" "}
-          rounds to guess the number{" "}
-          <Text style={styles.highlight}>{userNumber}</Text>.
-        </BodyText>
-      </View>
-      <MainButton onPress={onRestart}>NEW GAME</MainButton>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -32,14 +83,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingVertical: 10,
   },
   imageContainer: {
-    width: 300,
-    height: 300,
     borderWidth: 3,
     borderColor: "#000000",
-    borderRadius: 150,
-    marginVertical: 30,
     overflow: "hidden",
   },
   image: {
@@ -48,10 +96,8 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     marginHorizontal: 30,
-    marginVertical: 15,
   },
   resultText: {
-    fontSize: 20,
     textAlign: "center",
   },
   highlight: {
