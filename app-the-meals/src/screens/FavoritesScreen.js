@@ -1,18 +1,28 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-export function FavoritesScreen() {
-  return (
-    <View style={styles.screen}>
-      <Text>The Favorites Screen</Text>
-    </View>
-  );
+import { CustomHeaderButton, MealList } from "../components";
+import { MEALS } from "../data";
+
+export function FavoritesScreen({ navigation }) {
+  const favoriteMeals = MEALS.filter((meal) => ["m1", "m2"].includes(meal.id));
+
+  return <MealList listData={favoriteMeals} navigation={navigation} />;
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+FavoritesScreen.navigationOptions = (navigationData) => {
+  return {
+    headerTitle: "Your Favorites",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Menu"
+          iconName="ios-menu"
+          onPress={() => {
+            navigationData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
+};

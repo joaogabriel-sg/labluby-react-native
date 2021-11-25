@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { enableScreens } from "react-native-screens";
