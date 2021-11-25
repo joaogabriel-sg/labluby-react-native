@@ -2,10 +2,20 @@ import React, { useState } from "react";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { enableScreens } from "react-native-screens";
+import { createStore, combineReducers } from "redux";
+import { Provider } from "react-redux";
 
 import { AppRoutes } from "./src/routes";
 
+import { mealsReducer } from "./src/store";
+
 enableScreens();
+
+const rootReducer = combineReducers({
+  meals: mealsReducer,
+});
+
+const store = createStore(rootReducer);
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -26,5 +36,9 @@ export default function App() {
       />
     );
 
-  return <AppRoutes />;
+  return (
+    <Provider store={store}>
+      <AppRoutes />
+    </Provider>
+  );
 }
