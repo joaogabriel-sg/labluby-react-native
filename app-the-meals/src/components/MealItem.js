@@ -7,6 +7,8 @@ import {
   ImageBackground,
 } from "react-native";
 
+import { DefaultText } from "./DefaultText";
+
 export function MealItem({
   title,
   duration,
@@ -29,9 +31,9 @@ export function MealItem({
             </ImageBackground>
           </View>
           <View style={{ ...styles.mealRow, ...styles.mealDetail }}>
-            <Text>{duration}m</Text>
-            <Text>{complexity.toUpperCase()}</Text>
-            <Text>{affordability.toUpperCase()}</Text>
+            <DefaultText>{duration}m</DefaultText>
+            <DefaultText>{complexity.toUpperCase()}</DefaultText>
+            <DefaultText>{affordability.toUpperCase()}</DefaultText>
           </View>
         </View>
       </TouchableOpacity>

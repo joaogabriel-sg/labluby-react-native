@@ -1,9 +1,17 @@
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, ScrollView, View, Image } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-import { CustomHeaderButton } from "../components";
+import { CustomHeaderButton, DefaultText } from "../components";
 import { MEALS } from "../data";
+
+const ListItem = ({ children }) => {
+  return (
+    <View style={styles.listItem}>
+      <Text>{children}</Text>
+    </View>
+  );
+};
 
 export function MealDetailScreen({ navigation }) {
   const mealId = navigation.getParam("mealId");
@@ -11,13 +19,25 @@ export function MealDetailScreen({ navigation }) {
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
 
   return (
-    <View style={styles.screen}>
-      <Text>{selectedMeal.title}</Text>
-      <Button
-        title="Go Back to Categories"
-        onPress={() => navigation.popToTop()}
-      />
-    </View>
+    <ScrollView>
+      <Image source={{ uri: selectedMeal.imageUrl }} style={styles.image} />
+
+      <View style={styles.details}>
+        <DefaultText>{selectedMeal.duration}m</DefaultText>
+        <DefaultText>{selectedMeal.complexity.toUpperCase()}</DefaultText>
+        <DefaultText>{selectedMeal.affordability.toUpperCase()}</DefaultText>
+      </View>
+
+      <Text style={styles.title}>Ingredients</Text>
+      {selectedMeal.ingredients.map((ingredient) => (
+        <ListItem key={ingredient}>{ingredient}</ListItem>
+      ))}
+
+      <Text style={styles.title}>Steps</Text>
+      {selectedMeal.steps.map((step) => (
+        <ListItem key={step}>{step}</ListItem>
+      ))}
+    </ScrollView>
   );
 }
 
@@ -46,5 +66,26 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  image: {
+    width: "100%",
+    height: 200,
+  },
+  details: {
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  title: {
+    fontFamily: "open-sans-bold",
+    fontSize: 22,
+    textAlign: "center",
+  },
+  listItem: {
+    padding: 10,
+    borderColor: "#cccccc",
+    borderWidth: 1,
+    marginVertical: 10,
+    marginHorizontal: 20,
   },
 });
