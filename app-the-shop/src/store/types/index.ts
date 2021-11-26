@@ -1,8 +1,18 @@
-import { Product } from "../../shared/types";
+import { CartItem, Product } from "../../shared/types";
+
+export interface ProductsState {
+  availableProducts: Product[];
+  userProducts: Product[];
+}
+
+export interface CartState {
+  items: {
+    [key: string]: CartItem;
+  };
+  totalAmount: number;
+}
 
 export interface RootState {
-  products: {
-    availableProducts: Product[];
-    userProducts: Product[];
-  };
+  products: ProductsState;
+  cart: CartState;
 }

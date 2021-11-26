@@ -1,8 +1,14 @@
 import React from "react";
 import { Platform } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-import { ProductDetailScreen, ProductsOverviewScreen } from "../screens";
+import {
+  ProductDetailScreen,
+  ProductsOverviewScreen,
+  CartScreen,
+} from "../screens";
+import { CustomHeaderButton } from "../components";
 
 import { colors } from "../shared/constants";
 
@@ -29,12 +35,28 @@ export function AppRoutes() {
       <ShopNavigator.Screen
         name="ProductsOverview"
         component={ProductsOverviewScreen}
-        options={{ title: "All Products" }}
+        options={({ navigation }) => ({
+          title: "All Products",
+          headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+              <Item
+                title="Cart"
+                iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+                onPress={() => navigation.navigate("CartScreen")}
+              />
+            </HeaderButtons>
+          ),
+        })}
       />
       <ShopNavigator.Screen
         name="ProductDetailScreen"
         component={ProductDetailScreen}
         options={({ route }) => ({ title: route.params.productTitle })}
+      />
+      <ShopNavigator.Screen
+        name="CartScreen"
+        component={CartScreen}
+        options={{ title: "Cart" }}
       />
     </ShopNavigator.Navigator>
   );

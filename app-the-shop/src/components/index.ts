@@ -1,1 +1,2 @@
-export * from "./shop";
+export * from "./Shop";
+export * from "./UI";

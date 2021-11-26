@@ -1,12 +1,11 @@
 import React from "react";
 import { StyleSheet, FlatList } from "react-native";
-import { useSelector } from "react-redux";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useSelector, useDispatch } from "react-redux";
 
 import { ProductItem } from "../../components";
 
 import { ProductsOverviewScreenProps } from "../../routes";
-import { RootState } from "../../store";
+import { addToCart, RootState } from "../../store";
 
 export function ProductsOverviewScreen({
   navigation,
@@ -14,6 +13,8 @@ export function ProductsOverviewScreen({
   const products = useSelector(
     (state: RootState) => state.products.availableProducts
   );
+
+  const dispatch = useDispatch();
 
   return (
     <FlatList
@@ -30,7 +31,7 @@ export function ProductsOverviewScreen({
               productTitle: item.title,
             });
           }}
-          onAddToCart={() => {}}
+          onAddToCart={() => dispatch(addToCart(item))}
         />
       )}
     />

@@ -7,28 +7,34 @@ import {
   Text,
   View,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { ProductDetailScreenProps } from "../../routes";
 import { colors } from "../../shared/constants";
-import { RootState } from "../../store";
+import { addToCart, RootState } from "../../store";
 
 export function ProductDetailScreen({ route }: ProductDetailScreenProps) {
   const products = useSelector(
     (state: RootState) => state.products.availableProducts
   );
 
+  const dispatch = useDispatch();
+
   const { productId } = route.params;
-  const selectedProduct = products.find((product) => product.id === productId);
+  const selectedProduct = products.find((product) => product.id === productId)!;
 
   return (
     <ScrollView>
-      <Image source={{ uri: selectedProduct?.imageUrl }} style={styles.image} />
+      <Image source={{ uri: selectedProduct.imageUrl }} style={styles.image} />
       <View style={styles.actions}>
-        <Button title="Add to Cart" onPress={() => {}} color={colors.primary} />
+        <Button
+          title="Add to Cart"
+          onPress={() => dispatch(addToCart(selectedProduct))}
+          color={colors.primary}
+        />
       </View>
-      <Text style={styles.price}>${selectedProduct?.price.toFixed(2)}</Text>
-      <Text style={styles.description}>{selectedProduct?.description}</Text>
+      <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
+      <Text style={styles.description}>{selectedProduct.description}</Text>
     </ScrollView>
   );
 }
