@@ -7,11 +7,12 @@ import AppLoading from "expo-app-loading";
 
 import { AppRoutes } from "./src/routes";
 
-import { cartReducer, productsReducer } from "./src/store";
+import { cartReducer, ordersReducers, productsReducer } from "./src/store";
 
 const rootReducer = combineReducers({
-  products: productsReducer,
   cart: cartReducer,
+  orders: ordersReducers,
+  products: productsReducer,
 });
 
 const store = createStore(rootReducer);

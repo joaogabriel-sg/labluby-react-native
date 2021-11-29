@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 
-import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions";
+import { ADD_TO_CART, REMOVE_FROM_CART, ADD_ORDER } from "../actions";
 
 import { CartItem, Product } from "../../shared/types";
 import { CartState } from "../types";
@@ -69,6 +69,8 @@ export function cartReducer(
         items: updatedCartItems,
         totalAmount: state.totalAmount - selectedCartItem.productPrice,
       };
+    case ADD_ORDER:
+      return initialState;
     default:
       return state;
   }

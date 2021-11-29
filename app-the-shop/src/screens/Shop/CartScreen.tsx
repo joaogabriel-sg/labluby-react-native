@@ -6,11 +6,7 @@ import { CartItem } from "../../components";
 
 import { colors } from "../../shared/constants";
 import { CartItem as ICartItem } from "../../shared/types";
-import { removeFromCart, RootState } from "../../store";
-
-interface TransformedCartItem extends ICartItem {
-  productId: string;
-}
+import { removeFromCart, addOrder, RootState } from "../../store";
 
 export function CartScreen() {
   const cartTotalAmount = useSelector(
@@ -18,7 +14,7 @@ export function CartScreen() {
   );
 
   const cartItems = useSelector((state: RootState) => {
-    const transformedCartItems: TransformedCartItem[] = [];
+    const transformedCartItems: ICartItem[] = [];
     for (const key in state.cart.items) {
       transformedCartItems.push({
         productId: key,
@@ -44,7 +40,9 @@ export function CartScreen() {
         </Text>
         <Button
           title="Order Now"
-          onPress={() => {}}
+          onPress={() => {
+            dispatch(addOrder(cartItems, cartTotalAmount));
+          }}
           disabled={cartItems.length === 0}
           color={colors.accent}
         />
@@ -58,6 +56,7 @@ export function CartScreen() {
             title={item.productTitle}
             quantity={item.quantity}
             amount={item.sum}
+            deletable
             onRemove={() => {
               dispatch(removeFromCart(item.productId));
             }}

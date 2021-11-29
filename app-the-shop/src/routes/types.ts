@@ -1,22 +1,22 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export type ShopNavigatorParamList = {
+export type ProductsNavigatorParamList = {
   ProductsOverview: undefined;
   ProductDetailScreen: { productId: string; productTitle: string };
   CartScreen: undefined;
 };
 
 export type ProductsOverviewScreenProps = NativeStackScreenProps<
-  ShopNavigatorParamList,
+  ProductsNavigatorParamList,
   "ProductsOverview"
 >;
 
 export type ProductDetailScreenProps = NativeStackScreenProps<
-  ShopNavigatorParamList,
+  ProductsNavigatorParamList,
   "ProductDetailScreen"
 >;
 
 export type CartScreenProps = NativeStackScreenProps<
-  ShopNavigatorParamList,
+  ProductsNavigatorParamList,
   "CartScreen"
 >;
