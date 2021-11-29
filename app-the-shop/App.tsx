@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
@@ -40,6 +41,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
+        <StatusBar barStyle="light-content" />
         <AppRoutes />
       </NavigationContainer>
     </Provider>
