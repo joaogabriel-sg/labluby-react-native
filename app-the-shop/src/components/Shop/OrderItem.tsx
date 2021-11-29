@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button } from "react-native";
 import moment from "moment";
 
 import { CartItem } from "./CartItem";
+import { Card } from "../UI";
 
 import { colors } from "../../shared/constants";
 import { CartItem as CartItemType } from "../../shared/types";
@@ -17,7 +18,7 @@ export function OrderItem({ items, amount, date }: Props) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
-    <View style={styles.orderItem}>
+    <Card style={styles.orderItem}>
       <View style={styles.summary}>
         <Text style={styles.totalAmount}>${amount.toFixed(2)}</Text>
         <Text style={styles.date}>
@@ -45,21 +46,14 @@ export function OrderItem({ items, amount, date }: Props) {
           ))}
         </View>
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
   orderItem: {
-    backgroundColor: "#ffffff",
     padding: 10,
-    borderRadius: 10,
     margin: 20,
-    shadowColor: "#000000",
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
     alignItems: "center",
   },
   summary: {

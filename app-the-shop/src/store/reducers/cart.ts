@@ -1,6 +1,11 @@
 import { AnyAction } from "redux";
 
-import { ADD_TO_CART, REMOVE_FROM_CART, ADD_ORDER } from "../actions";
+import {
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  ADD_ORDER,
+  DELETE_PRODUCT,
+} from "../actions";
 
 import { CartItem, Product } from "../../shared/types";
 import { CartState } from "../types";
@@ -24,6 +29,7 @@ export function cartReducer(
 
       if (state.items[addedProduct.id])
         updatedOrNewCartItem = {
+          productId: addedProduct.id,
           productTitle,
           productPrice,
           quantity: state.items[addedProduct.id].quantity + 1,
@@ -31,6 +37,7 @@ export function cartReducer(
         };
       else
         updatedOrNewCartItem = {
+          productId: addedProduct.id,
           productTitle,
           productPrice,
           quantity: 1,
@@ -71,6 +78,18 @@ export function cartReducer(
       };
     case ADD_ORDER:
       return initialState;
+    case DELETE_PRODUCT:
+      if (!state.items[action.productId]) return state;
+
+      const updatedItems = { ...state.items };
+      const itemTotal = state.items[action.productId].sum;
+      delete updatedItems[action.productId];
+
+      return {
+        ...state,
+        items: updatedItems,
+        totalAmount: state.totalAmount - itemTotal,
+      };
     default:
       return state;
   }

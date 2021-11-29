@@ -1,10 +1,12 @@
 import React from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Button } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { ProductItem } from "../../components";
 
 import { ProductsOverviewScreenProps } from "../../routes";
+import { colors } from "../../shared/constants";
+
 import { addToCart, RootState } from "../../store";
 
 export function ProductsOverviewScreen({
@@ -16,6 +18,13 @@ export function ProductsOverviewScreen({
 
   const dispatch = useDispatch();
 
+  function selectItemHandler(id: string, title: string) {
+    navigation.navigate("ProductDetailScreen", {
+      productId: id,
+      productTitle: title,
+    });
+  }
+
   return (
     <FlatList
       data={products}
@@ -25,14 +34,23 @@ export function ProductsOverviewScreen({
           title={item.title}
           price={item.price}
           image={item.imageUrl}
-          onViewDetail={() => {
-            navigation.navigate("ProductDetailScreen", {
-              productId: item.id,
-              productTitle: item.title,
-            });
+          onSelect={() => {
+            selectItemHandler(item.id, item.title);
           }}
-          onAddToCart={() => dispatch(addToCart(item))}
-        />
+        >
+          <Button
+            title="View Details"
+            onPress={() => {
+              selectItemHandler(item.id, item.title);
+            }}
+            color={colors.primary}
+          />
+          <Button
+            title="To Cart"
+            onPress={() => dispatch(addToCart(item))}
+            color={colors.primary}
+          />
+        </ProductItem>
       )}
     />
   );

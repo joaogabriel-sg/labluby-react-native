@@ -7,18 +7,19 @@ import { Ionicons } from "@expo/vector-icons";
 
 import {
   CartScreen,
+  EditProductScreen,
   OrdersScreen,
   ProductDetailScreen,
   ProductsOverviewScreen,
+  UserProductsScreen,
 } from "../screens";
 import { CustomHeaderButton } from "../components";
 
 import { colors } from "../shared/constants";
 
-import { ProductsNavigatorParamList } from "./types";
+import { RootNavigatorParamList } from "./types";
 
-const ProductsNavigator =
-  createNativeStackNavigator<ProductsNavigatorParamList>();
+const ProductsNavigator = createNativeStackNavigator<RootNavigatorParamList>();
 
 function ProductsNavigatorScreens() {
   return (
@@ -84,6 +85,7 @@ function OrdersNavigatorScreens() {
         name="OrdersScreen"
         component={OrdersScreen}
         options={({ navigation }) => ({
+          title: "Your Orders",
           headerTintColor:
             Platform.OS === "android" ? "#ffffff" : colors.primary,
           headerStyle: {
@@ -110,6 +112,62 @@ function OrdersNavigatorScreens() {
   );
 }
 
+const AdminNavigator = createNativeStackNavigator<RootNavigatorParamList>();
+
+function AdminNavigatorScreens() {
+  return (
+    <AdminNavigator.Navigator
+      screenOptions={({ navigation }) => ({
+        headerTintColor: Platform.OS === "android" ? "#ffffff" : colors.primary,
+        headerStyle: {
+          backgroundColor: Platform.OS === "android" ? colors.primary : "",
+        },
+        headerTitleStyle: {
+          fontFamily: "open-sans-bold",
+        },
+        headerBackTitleStyle: {
+          fontFamily: "open-sans-bold",
+        },
+      })}
+    >
+      <AdminNavigator.Screen
+        name="UserProductsScreen"
+        component={UserProductsScreen}
+        options={({ navigation }) => ({
+          title: "Your Products",
+          headerLeft: () => (
+            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+              <Item
+                title="Menu"
+                iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+                onPress={() => navigation.toggleDrawer()}
+              />
+            </HeaderButtons>
+          ),
+          headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+              <Item
+                title="Add"
+                iconName={
+                  Platform.OS === "android" ? "md-create" : "ios-create"
+                }
+                onPress={() => navigation.navigate("EditProductScreen")}
+              />
+            </HeaderButtons>
+          ),
+        })}
+      />
+      <AdminNavigator.Screen
+        name="EditProductScreen"
+        component={EditProductScreen}
+        options={({ route }) => ({
+          title: route.params?.productId ? "Edit Product" : "Add Product",
+        })}
+      />
+    </AdminNavigator.Navigator>
+  );
+}
+
 const ShopNavigator = createDrawerNavigator();
 
 export function AppRoutes() {
@@ -123,16 +181,7 @@ export function AppRoutes() {
       <ShopNavigator.Screen
         name="Products"
         component={ProductsNavigatorScreens}
-        options={({ navigation }) => ({
-          headerLeft: () => (
-            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-              <Item
-                title="Menu"
-                iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-                onPress={() => navigation.toggleDrawer()}
-              />
-            </HeaderButtons>
-          ),
+        options={{
           drawerIcon: ({ color, size }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
@@ -140,22 +189,12 @@ export function AppRoutes() {
               color={color}
             />
           ),
-        })}
+        }}
       />
       <ShopNavigator.Screen
         name="Orders"
         component={OrdersNavigatorScreens}
-        options={({ navigation }) => ({
-          title: "Your Orders",
-          headerLeft: () => (
-            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-              <Item
-                title="Menu"
-                iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-                onPress={() => navigation.toggleDrawer()}
-              />
-            </HeaderButtons>
-          ),
+        options={{
           drawerIcon: ({ color, size }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-list" : "ios-list"}
@@ -163,7 +202,20 @@ export function AppRoutes() {
               color={color}
             />
           ),
-        })}
+        }}
+      />
+      <ShopNavigator.Screen
+        name="Admin"
+        component={AdminNavigatorScreens}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-create" : "ios-create"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
       />
     </ShopNavigator.Navigator>
   );
