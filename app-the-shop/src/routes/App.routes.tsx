@@ -1,9 +1,14 @@
 import React from "react";
-import { Platform } from "react-native";
+import { Button, Platform } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
 
 import {
   AuthScreen,
@@ -12,13 +17,16 @@ import {
   OrdersScreen,
   ProductDetailScreen,
   ProductsOverviewScreen,
+  StartupScreen,
   UserProductsScreen,
 } from "../screens";
 import { CustomHeaderButton } from "../components";
 
-import { colors } from "../shared/constants";
+import { logout } from "../store";
 
+import { colors } from "../shared/constants";
 import { RootNavigatorParamList } from "./types";
+import LogoutButton from "../components/Shop/LogoutButton";
 
 const ProductsNavigator = createNativeStackNavigator<RootNavigatorParamList>();
 
@@ -169,7 +177,7 @@ function AdminNavigatorScreens() {
   );
 }
 
-const ShopNavigator = createDrawerNavigator();
+const ShopNavigator = createDrawerNavigator<RootNavigatorParamList>();
 
 function ShopNavigatorScreens() {
   return (
@@ -178,11 +186,23 @@ function ShopNavigatorScreens() {
         headerShown: false,
         drawerActiveTintColor: colors.primary,
       }}
+      drawerContent={(props) => {
+        return (
+          <DrawerContentScrollView
+            {...props}
+            style={{ flex: 1, paddingTop: 20 }}
+          >
+            <DrawerItemList {...props} />
+            <LogoutButton onLogout={() => props.navigation.navigate("Auth")} />
+          </DrawerContentScrollView>
+        );
+      }}
     >
       <ShopNavigator.Screen
-        name="Products"
+        name="ShopProductsScreen"
         component={ProductsNavigatorScreens}
         options={{
+          title: "Products",
           drawerIcon: ({ color, size }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
@@ -193,9 +213,10 @@ function ShopNavigatorScreens() {
         }}
       />
       <ShopNavigator.Screen
-        name="Orders"
+        name="ShopOrdersScreen"
         component={OrdersNavigatorScreens}
         options={{
+          title: "Orders",
           drawerIcon: ({ color, size }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-list" : "ios-list"}
@@ -206,9 +227,10 @@ function ShopNavigatorScreens() {
         }}
       />
       <ShopNavigator.Screen
-        name="Admin"
+        name="ShopAdminScreen"
         component={AdminNavigatorScreens}
         options={{
+          title: "Admin",
           drawerIcon: ({ color, size }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-create" : "ios-create"}
@@ -249,11 +271,12 @@ export function AuthNavigatorScreens() {
   );
 }
 
-const MainNavigator = createNativeStackNavigator();
+const MainNavigator = createNativeStackNavigator<RootNavigatorParamList>();
 
 export function AppRoutes() {
   return (
     <MainNavigator.Navigator screenOptions={{ headerShown: false }}>
+      <MainNavigator.Screen name="Startup" component={StartupScreen} />
       <MainNavigator.Screen name="Auth" component={AuthNavigatorScreens} />
       <MainNavigator.Screen name="Shop" component={ShopNavigatorScreens} />
     </MainNavigator.Navigator>

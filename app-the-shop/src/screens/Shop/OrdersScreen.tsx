@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, FlatList, View, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  ActivityIndicator,
+  Text,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -31,6 +37,13 @@ export function OrdersScreen() {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+
+  if (orders.length === 0)
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>No orders found, maybe start ordering some products?</Text>
       </View>
     );
 

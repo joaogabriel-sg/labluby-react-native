@@ -17,10 +17,12 @@ export function fetchOrders(): ThunkAction<
   unknown,
   AnyAction
 > {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { userId } = getState().auth;
+
     try {
       const response = await fetch(
-        "https://the-shop-app-87a3e-default-rtdb.firebaseio.com/orders/u1.json"
+        `https://the-shop-app-87a3e-default-rtdb.firebaseio.com/orders/${userId}.json`
       );
 
       if (!response.ok) throw new Error("Something went wrong!");
@@ -48,11 +50,13 @@ export function addOrder(
   cartItems: Items[],
   totalAmount: number
 ): ThunkAction<void, RootState, unknown, AnyAction> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { token, userId } = getState().auth;
+
     const date = new Date();
 
     const response = await fetch(
-      "https://the-shop-app-87a3e-default-rtdb.firebaseio.com/orders/u1.json",
+      `https://the-shop-app-87a3e-default-rtdb.firebaseio.com/orders/${userId}.json?auth=${token}`,
       {
         method: "POST",
         headers: {

@@ -15,7 +15,9 @@ export function fetchProducts(): ThunkAction<
   unknown,
   AnyAction
 > {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { userId } = getState().auth;
+
     try {
       const response = await fetch(
         "https://the-shop-app-87a3e-default-rtdb.firebaseio.com/products.json"
@@ -33,6 +35,9 @@ export function fetchProducts(): ThunkAction<
       dispatch({
         type: SET_PRODUCTS,
         products: loadedProducts,
+        userProducts: loadedProducts.filter(
+          (product) => product.ownerId === userId
+        ),
       });
     } catch (err) {
       throw err;
@@ -43,9 +48,11 @@ export function fetchProducts(): ThunkAction<
 export function deleteProduct(
   productId: string
 ): ThunkAction<void, RootState, unknown, AnyAction> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+
     const response = await fetch(
-      `https://the-shop-app-87a3e-default-rtdb.firebaseio.com/products/${productId}.json`,
+      `https://the-shop-app-87a3e-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,
       { method: "DELETE" }
     );
 
@@ -61,9 +68,11 @@ export function createProduct(
   imageUrl: string,
   price: number
 ): ThunkAction<void, RootState, unknown, AnyAction> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { token, userId } = getState().auth;
+
     const response = await fetch(
-      "https://the-shop-app-87a3e-default-rtdb.firebaseio.com/products.json",
+      `https://the-shop-app-87a3e-default-rtdb.firebaseio.com/products.json?auth=${token}`,
       {
         method: "POST",
         headers: {
@@ -74,6 +83,7 @@ export function createProduct(
           description,
           imageUrl,
           price,
+          ownerId: userId,
         }),
       }
     );
@@ -88,6 +98,7 @@ export function createProduct(
         description,
         imageUrl,
         price,
+        ownerId: userId,
       },
     });
   };
@@ -99,9 +110,11 @@ export function updateProduct(
   imageUrl: string,
   description: string
 ): ThunkAction<void, RootState, unknown, AnyAction> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+
     const response = await fetch(
-      `https://the-shop-app-87a3e-default-rtdb.firebaseio.com/products/${id}.json`,
+      `https://the-shop-app-87a3e-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`,
       {
         method: "PATCH",
         headers: {

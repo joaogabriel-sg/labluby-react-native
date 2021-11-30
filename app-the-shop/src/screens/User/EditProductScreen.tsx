@@ -140,12 +140,12 @@ export function EditProductScreen({
           )
         );
       }
+      setIsLoading(false);
       navigation.goBack();
     } catch (err: any) {
+      setIsLoading(false);
       setError(err.message);
     }
-
-    setIsLoading(false);
   }, [dispatch, productId, formState]);
 
   useEffect(() => {

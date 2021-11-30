@@ -16,7 +16,13 @@ export interface OrdersState {
   orders: Order[];
 }
 
+export interface AuthState {
+  token: null | string;
+  userId: null | string;
+}
+
 export interface RootState {
+  auth: AuthState;
   cart: CartState;
   orders: OrdersState;
   products: ProductsState;

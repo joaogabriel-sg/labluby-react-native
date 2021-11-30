@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, FlatList, Button, Alert } from "react-native";
+import { StyleSheet, FlatList, Button, Alert, View, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { ProductItem } from "../../components";
@@ -32,6 +32,13 @@ export function UserProductsScreen({ navigation }: UserProductsScreenProps) {
   function editProductHandler(id: string) {
     navigation.navigate("EditProductScreen", { productId: id });
   }
+
+  if (userProducts.length === 0)
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>No products found, maybe start creating some?</Text>
+      </View>
+    );
 
   return (
     <FlatList

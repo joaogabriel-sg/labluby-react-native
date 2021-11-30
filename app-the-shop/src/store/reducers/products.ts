@@ -7,13 +7,12 @@ import {
   SET_PRODUCTS,
 } from "../actions/products";
 
-import { PRODUCTS } from "../../shared/data";
 import { Product } from "../../shared/types";
 import { ProductsState } from "../types";
 
 const initialState: ProductsState = {
-  availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter((product) => product.ownerId === "u1"),
+  availableProducts: [],
+  userProducts: [],
 };
 
 export function productsReducer(
@@ -23,7 +22,6 @@ export function productsReducer(
   switch (action.type) {
     case CREATE_PRODUCT:
       const newProduct: Product = {
-        ownerId: "u1",
         ...action.productData,
       };
 
@@ -74,9 +72,7 @@ export function productsReducer(
       return {
         ...state,
         availableProducts: action.products,
-        userProducts: action.products.filter(
-          (product: Product) => product.ownerId === "u1"
-        ),
+        userProducts: action.userProducts,
       };
     default:
       return state;

@@ -1,2 +1,3 @@
-export * from "./app.routes";
+export * from "./App.routes";
+export * from "./Routes";
 export * from "./types";

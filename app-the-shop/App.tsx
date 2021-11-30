@@ -7,11 +7,17 @@ import ReduxThunk from "redux-thunk";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 
-import { AppRoutes } from "./src/routes";
+import { Routes } from "./src/routes";
 
-import { cartReducer, ordersReducers, productsReducer } from "./src/store";
+import {
+  authReducer,
+  cartReducer,
+  ordersReducers,
+  productsReducer,
+} from "./src/store";
 
 const rootReducer = combineReducers({
+  auth: authReducer,
   cart: cartReducer,
   orders: ordersReducers,
   products: productsReducer,
@@ -43,7 +49,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <StatusBar barStyle="light-content" />
-        <AppRoutes />
+        <Routes />
       </NavigationContainer>
     </Provider>
   );

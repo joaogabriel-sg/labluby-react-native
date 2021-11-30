@@ -6,6 +6,13 @@ export type RootNavigatorParamList = {
   CartScreen: undefined;
   UserProductsScreen: undefined;
   EditProductScreen: { productId?: string };
+  AuthScreen: undefined;
+  ShopProductsScreen: undefined;
+  ShopOrdersScreen: undefined;
+  ShopAdminScreen: undefined;
+  Startup: undefined;
+  Auth: undefined;
+  Shop: { screen: string };
 };
 
 export type ProductsOverviewScreenProps = NativeStackScreenProps<
@@ -31,4 +38,29 @@ export type UserProductsScreenProps = NativeStackScreenProps<
 export type EditProductScreenProps = NativeStackScreenProps<
   RootNavigatorParamList,
   "EditProductScreen"
+>;
+
+export type ShopProductsScreenProps = NativeStackScreenProps<
+  RootNavigatorParamList,
+  "ShopProductsScreen"
+>;
+
+export type ShopOrdersScreenProps = NativeStackScreenProps<
+  RootNavigatorParamList,
+  "ShopOrdersScreen"
+>;
+
+export type ShopAdminScreenProps = NativeStackScreenProps<
+  RootNavigatorParamList,
+  "ShopAdminScreen"
+>;
+
+export type AuthScreenProps = NativeStackScreenProps<
+  RootNavigatorParamList,
+  "AuthScreen"
+>;
+
+export type StartupScreenProps = NativeStackScreenProps<
+  RootNavigatorParamList,
+  "Startup"
 >;
