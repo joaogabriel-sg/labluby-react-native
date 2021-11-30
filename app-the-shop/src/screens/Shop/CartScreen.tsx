@@ -1,5 +1,13 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Button,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Card, CartItem } from "../../components";
@@ -9,6 +17,9 @@ import { CartItem as ICartItem } from "../../shared/types";
 import { removeFromCart, addOrder, RootState } from "../../store";
 
 export function CartScreen() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const cartTotalAmount = useSelector(
     (state: RootState) => state.cart.totalAmount
   );
@@ -31,6 +42,23 @@ export function CartScreen() {
 
   const dispatch = useDispatch();
 
+  async function sendOrderHandler() {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await dispatch(addOrder(cartItems, cartTotalAmount));
+    } catch (err: any) {
+      setError(err.message);
+    }
+
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    if (error) Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+  }, [error]);
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -40,14 +68,15 @@ export function CartScreen() {
             ${Math.round((cartTotalAmount * 100) / 100).toFixed(2)}
           </Text>
         </Text>
-        <Button
-          title="Order Now"
-          onPress={() => {
-            dispatch(addOrder(cartItems, cartTotalAmount));
-          }}
-          disabled={cartItems.length === 0}
-          color={colors.accent}
-        />
+        {isLoading && <ActivityIndicator size="small" color={colors.primary} />}
+        {!isLoading && (
+          <Button
+            title="Order Now"
+            onPress={sendOrderHandler}
+            disabled={cartItems.length === 0}
+            color={colors.accent}
+          />
+        )}
       </Card>
 
       <FlatList

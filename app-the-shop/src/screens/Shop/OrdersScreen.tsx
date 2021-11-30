@@ -1,13 +1,38 @@
-import React from "react";
-import { StyleSheet, FlatList } from "react-native";
-import { useSelector } from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
+import { StyleSheet, FlatList, View, ActivityIndicator } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 
 import { OrderItem } from "../../components";
 
-import { RootState } from "../../store";
+import { fetchOrders, RootState } from "../../store";
+
+import { colors } from "../../shared/constants";
 
 export function OrdersScreen() {
+  const [isLoading, setIsLoading] = useState(true);
+
   const orders = useSelector((state: RootState) => state.orders.orders);
+  const dispatch = useDispatch();
+
+  const loadOrders = useCallback(async () => {
+    setIsLoading(true);
+    await dispatch(fetchOrders());
+    setIsLoading(false);
+  }, [dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadOrders();
+    }, [dispatch, loadOrders])
+  );
+
+  if (isLoading)
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
 
   return (
     <FlatList
@@ -24,4 +49,10 @@ export function OrdersScreen() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

@@ -1,12 +1,14 @@
 import { AnyAction } from "redux";
 
-import { PRODUCTS } from "../../shared/data";
-import { Product } from "../../shared/types";
 import {
   DELETE_PRODUCT,
   CREATE_PRODUCT,
   UPDATE_PRODUCT,
+  SET_PRODUCTS,
 } from "../actions/products";
+
+import { PRODUCTS } from "../../shared/data";
+import { Product } from "../../shared/types";
 import { ProductsState } from "../types";
 
 const initialState: ProductsState = {
@@ -21,8 +23,7 @@ export function productsReducer(
   switch (action.type) {
     case CREATE_PRODUCT:
       const newProduct: Product = {
-        id: new Date().toString(),
-        ownerId: "ui",
+        ownerId: "u1",
         ...action.productData,
       };
 
@@ -67,6 +68,14 @@ export function productsReducer(
         ),
         availableProducts: state.availableProducts.filter(
           (product) => product.id !== action.productId
+        ),
+      };
+    case SET_PRODUCTS:
+      return {
+        ...state,
+        availableProducts: action.products,
+        userProducts: action.products.filter(
+          (product: Product) => product.ownerId === "u1"
         ),
       };
     default:

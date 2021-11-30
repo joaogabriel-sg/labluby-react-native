@@ -1,17 +1,29 @@
-import React from "react";
-import { StyleSheet, FlatList, Button } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  StyleSheet,
+  FlatList,
+  Button,
+  ActivityIndicator,
+  View,
+  Text,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 
 import { ProductItem } from "../../components";
 
 import { ProductsOverviewScreenProps } from "../../routes";
 import { colors } from "../../shared/constants";
 
-import { addToCart, RootState } from "../../store";
+import { addToCart, fetchProducts, RootState } from "../../store";
 
 export function ProductsOverviewScreen({
   navigation,
 }: ProductsOverviewScreenProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const products = useSelector(
     (state: RootState) => state.products.availableProducts
   );
@@ -25,10 +37,58 @@ export function ProductsOverviewScreen({
     });
   }
 
+  const loadProducts = useCallback(async () => {
+    setError(null);
+    setIsRefreshing(true);
+    try {
+      await dispatch(fetchProducts());
+    } catch (err: any) {
+      setError(err.message);
+    }
+    setIsRefreshing(false);
+  }, [dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      loadProducts().then(() => {
+        setIsLoading(false);
+      });
+    }, [loadProducts])
+  );
+
+  if (error)
+    return (
+      <View style={styles.centered}>
+        <Text>An error occurred!</Text>
+        <Button
+          title="Try again"
+          onPress={loadProducts}
+          color={colors.primary}
+        />
+      </View>
+    );
+
+  if (isLoading)
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+
+  if (products.length === 0)
+    return (
+      <View style={styles.centered}>
+        <Text>No products found. Maybe start adding some!</Text>
+      </View>
+    );
+
   return (
     <FlatList
       data={products}
       keyExtractor={(item) => item.id}
+      refreshing={isRefreshing}
+      onRefresh={loadProducts}
       renderItem={({ item }) => (
         <ProductItem
           title={item.title}
@@ -56,4 +116,10 @@ export function ProductsOverviewScreen({
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
