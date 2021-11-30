@@ -6,6 +6,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
 
 import {
+  AuthScreen,
   CartScreen,
   EditProductScreen,
   OrdersScreen,
@@ -117,7 +118,7 @@ const AdminNavigator = createNativeStackNavigator<RootNavigatorParamList>();
 function AdminNavigatorScreens() {
   return (
     <AdminNavigator.Navigator
-      screenOptions={({ navigation }) => ({
+      screenOptions={{
         headerTintColor: Platform.OS === "android" ? "#ffffff" : colors.primary,
         headerStyle: {
           backgroundColor: Platform.OS === "android" ? colors.primary : "",
@@ -128,7 +129,7 @@ function AdminNavigatorScreens() {
         headerBackTitleStyle: {
           fontFamily: "open-sans-bold",
         },
-      })}
+      }}
     >
       <AdminNavigator.Screen
         name="UserProductsScreen"
@@ -170,7 +171,7 @@ function AdminNavigatorScreens() {
 
 const ShopNavigator = createDrawerNavigator();
 
-export function AppRoutes() {
+function ShopNavigatorScreens() {
   return (
     <ShopNavigator.Navigator
       screenOptions={{
@@ -218,5 +219,43 @@ export function AppRoutes() {
         }}
       />
     </ShopNavigator.Navigator>
+  );
+}
+
+const AuthNavigator = createNativeStackNavigator();
+
+export function AuthNavigatorScreens() {
+  return (
+    <AuthNavigator.Navigator
+      screenOptions={{
+        headerTintColor: Platform.OS === "android" ? "#ffffff" : colors.primary,
+        headerStyle: {
+          backgroundColor: Platform.OS === "android" ? colors.primary : "",
+        },
+        headerTitleStyle: {
+          fontFamily: "open-sans-bold",
+        },
+        headerBackTitleStyle: {
+          fontFamily: "open-sans-bold",
+        },
+      }}
+    >
+      <AuthNavigator.Screen
+        name="AuthScreen"
+        component={AuthScreen}
+        options={{ title: "Authenticate" }}
+      />
+    </AuthNavigator.Navigator>
+  );
+}
+
+const MainNavigator = createNativeStackNavigator();
+
+export function AppRoutes() {
+  return (
+    <MainNavigator.Navigator screenOptions={{ headerShown: false }}>
+      <MainNavigator.Screen name="Auth" component={AuthNavigatorScreens} />
+      <MainNavigator.Screen name="Shop" component={ShopNavigatorScreens} />
+    </MainNavigator.Navigator>
   );
 }
