@@ -16,11 +16,17 @@ export function placesReducer(
   switch (action.type) {
     case PlacesActions.ADD_PLACE:
       const newPlace: Place = {
-        id: new Date().toString(),
+        id: action.placeData.id.toString(),
         title: action.placeData.title,
+        imageUri: action.placeData.imageUri,
       };
 
       return { ...state, places: state.places.concat(newPlace) };
+    case PlacesActions.SET_PLACES:
+      return {
+        ...state,
+        places: action.places,
+      };
     default:
       return state;
   }

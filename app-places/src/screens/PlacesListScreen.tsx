@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { PlaceItem } from "../components";
 
 import { PlacesListScreenProps } from "../routes";
-import { RootState } from "../store";
+import { loadPlaces, RootState } from "../store";
 
 export function PlacesListScreen({ navigation }: PlacesListScreenProps) {
   const { places } = useSelector((state: RootState) => state.places);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadPlaces());
+  }, [dispatch]);
 
   return (
     <FlatList
@@ -18,7 +23,7 @@ export function PlacesListScreen({ navigation }: PlacesListScreenProps) {
         <PlaceItem
           title={item.title}
           address=""
-          image=""
+          image={item.imageUri}
           onSelect={() => {
             navigation.navigate("PlaceDetail", {
               placeId: item.id,

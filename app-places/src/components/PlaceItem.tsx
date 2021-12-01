@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
   infoContainer: {
     width: 250,
     marginLeft: 25,
-    alignItems: "center",
     justifyContent: "center",
   },
   title: {

@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Alert, Button, Image, StyleSheet, Text, View } from "react-native";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 import { colors } from "../shared/constants";
 
-export function ImageSelector() {
+interface ImageSelectorProps {
+  onImageTaken: (imagePath: string) => void;
+}
+
+export function ImageSelector({ onImageTaken }: ImageSelectorProps) {
   const [previewImage, setPreviewImage] = useState("");
 
   async function handleTakeImage() {
@@ -17,6 +21,7 @@ export function ImageSelector() {
     if (image.cancelled) return;
 
     setPreviewImage(image.uri);
+    onImageTaken(image.uri);
   }
 
   return (
@@ -38,6 +43,7 @@ export function ImageSelector() {
 
 const styles = StyleSheet.create({
   imagePicker: {
+    marginBottom: 15,
     alignItems: "center",
   },
   imagePreview: {
