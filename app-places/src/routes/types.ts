@@ -1,8 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
+type Location = { lat: number; lng: number };
+
 export type RootStackParamList = {
-  MapScreen: undefined;
-  NewPlace: undefined;
+  MapScreen: { readonly: boolean; initialLocation: Location } | undefined;
+  NewPlace: { pickedLocation: Location } | undefined;
   Places: undefined;
   PlaceDetail: { placeId: string; placeTitle: string };
 };

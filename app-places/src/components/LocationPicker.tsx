@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -8,21 +8,38 @@ import {
   View,
 } from "react-native";
 import * as Location from "expo-location";
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+import { MapPreview } from "./MapPreview";
 
 import { colors } from "../shared/constants";
+import { RootStackParamList } from "../routes";
 
-interface LocationPickerProps {}
+interface LocationPickerProps {
+  navigation: NativeStackNavigationProp<RootStackParamList, "NewPlace">;
+  mapPickedLocation: { lat: number; lng: number } | undefined;
+  onLocationPicked: (location: { lat: number; lng: number }) => void;
+}
 
 interface IPickedLocation {
   lat: number;
   lng: number;
 }
 
-export function LocationPicker() {
+export function LocationPicker({
+  navigation,
+  mapPickedLocation,
+  onLocationPicked,
+}: LocationPickerProps) {
   const [isFetching, setIsFetching] = useState(false);
-  const [pickedLocation, setPickedLocation] = useState<IPickedLocation | null>(
-    null
-  );
+  const [pickedLocation, setPickedLocation] = useState<
+    IPickedLocation | undefined
+  >();
 
   async function handleGetUserLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -39,10 +56,12 @@ export function LocationPicker() {
     setIsFetching(true);
     try {
       const { coords } = await Location.getCurrentPositionAsync();
-      setPickedLocation({
+      const coordsData = {
         lat: coords.latitude,
         lng: coords.longitude,
-      });
+      };
+      setPickedLocation(coordsData);
+      onLocationPicked(coordsData);
     } catch (err) {
       Alert.alert(
         "Could not fetch location!",
@@ -53,34 +72,60 @@ export function LocationPicker() {
     setIsFetching(false);
   }
 
+  function handlePickOnMap() {
+    navigation.navigate("MapScreen");
+  }
+
+  useEffect(() => {
+    if (mapPickedLocation) {
+      setPickedLocation(mapPickedLocation);
+      onLocationPicked({ ...mapPickedLocation });
+    }
+  }, [mapPickedLocation, onLocationPicked]);
+
   return (
     <View style={styles.locationPicker}>
-      <View style={styles.mapPreview}>
+      <MapPreview
+        location={pickedLocation}
+        onPress={handlePickOnMap}
+        style={styles.mapPreview}
+      >
         {!isFetching && <Text>No location chosen yet!</Text>}
         {isFetching && (
           <ActivityIndicator size="large" color={colors.primary} />
         )}
+      </MapPreview>
+
+      <View style={styles.actions}>
+        <Button
+          title="Get User Location"
+          color={colors.primary}
+          onPress={handleGetUserLocation}
+        />
+        <Button
+          title="Pick on Map"
+          color={colors.primary}
+          onPress={handlePickOnMap}
+        />
       </View>
-      <Button
-        title="Get User Location"
-        color={colors.primary}
-        onPress={handleGetUserLocation}
-      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  locationPicker: {
-    marginBottom: 15,
-  },
   mapPreview: {
     width: "100%",
     height: 150,
     borderColor: "#cccccc",
     borderWidth: 1,
     marginBottom: 10,
-    alignItems: "center",
-    justifyContent: "center",
+  },
+  locationPicker: {
+    marginBottom: 15,
+  },
+  actions: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
 });

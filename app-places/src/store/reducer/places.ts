@@ -19,6 +19,9 @@ export function placesReducer(
         id: action.placeData.id.toString(),
         title: action.placeData.title,
         imageUri: action.placeData.imageUri,
+        address: action.placeData.address,
+        lat: action.placeData.lat,
+        lng: action.placeData.lng,
       };
 
       return { ...state, places: state.places.concat(newPlace) };

@@ -1,9 +1,10 @@
 import React from "react";
-import { StatusBar } from "react-native";
+// import { StatusBar } from "react-native";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
 import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 import { AppRoutes } from "./src/routes";
 
@@ -31,7 +32,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
+        <StatusBar style="light" backgroundColor={colors.primary} />
         <AppRoutes />
       </NavigationContainer>
     </Provider>

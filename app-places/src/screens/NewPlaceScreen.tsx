@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   ScrollView,
@@ -16,9 +16,17 @@ import { NewPlaceScreenProps } from "../routes";
 
 import { colors } from "../shared/constants";
 
-export function NewPlaceScreen({ navigation }: NewPlaceScreenProps) {
+interface ILocation {
+  lat: number;
+  lng: number;
+}
+
+export function NewPlaceScreen({ navigation, route }: NewPlaceScreenProps) {
   const [titleValue, setTitleValue] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<
+    ILocation | undefined
+  >();
 
   const dispatch = useDispatch();
 
@@ -30,8 +38,16 @@ export function NewPlaceScreen({ navigation }: NewPlaceScreenProps) {
     setSelectedImage(imagePath);
   }
 
+  const handleLocationPicked = useCallback((location: ILocation) => {
+    setSelectedLocation(location);
+  }, []);
+
   function handleSavePlace() {
-    dispatch(addPlace(titleValue, selectedImage));
+    if (titleValue.trim().length === 0) return;
+    if (selectedImage.trim().length === 0) return;
+    if (!selectedLocation) return;
+
+    dispatch(addPlace(titleValue, selectedImage, selectedLocation));
     navigation.goBack();
   }
 
@@ -45,7 +61,11 @@ export function NewPlaceScreen({ navigation }: NewPlaceScreenProps) {
           onChangeText={handleChangeTitle}
         />
         <ImageSelector onImageTaken={handleTakenImage} />
-        <LocationPicker />
+        <LocationPicker
+          navigation={navigation}
+          mapPickedLocation={route.params?.pickedLocation}
+          onLocationPicked={handleLocationPicked}
+        />
         <Button
           title="Save Place"
           color={colors.primary}

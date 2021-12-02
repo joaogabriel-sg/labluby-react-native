@@ -22,7 +22,7 @@ export function PlacesListScreen({ navigation }: PlacesListScreenProps) {
       renderItem={({ item }) => (
         <PlaceItem
           title={item.title}
-          address=""
+          address={item.address}
           image={item.imageUri}
           onSelect={() => {
             navigation.navigate("PlaceDetail", {
