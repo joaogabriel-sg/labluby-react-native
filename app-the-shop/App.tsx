@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
+import * as Notifications from "expo-notifications";
 
 import { Routes } from "./src/routes";
 
@@ -15,6 +16,16 @@ import {
   ordersReducers,
   productsReducer,
 } from "./src/store";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowAlert: true,
+    };
+  },
+});
 
 const rootReducer = combineReducers({
   auth: authReducer,

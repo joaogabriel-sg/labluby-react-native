@@ -4,4 +4,5 @@ export interface CartItem {
   productTitle: string;
   productId: string;
   sum: number;
+  productPushToken: string;
 }

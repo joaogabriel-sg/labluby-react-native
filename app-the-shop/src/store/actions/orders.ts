@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
 import { ThunkAction } from "redux-thunk";
+import * as Notifications from "expo-notifications";
 
 import { CartItem, Order } from "../../shared/types";
 import { RootState } from "../types";
@@ -83,5 +84,26 @@ export function addOrder(
         date,
       },
     });
+
+    for (const cartItem of cartItems) {
+      console.log(cartItem);
+
+      const message = {
+        to: cartItem.productPushToken,
+        sound: "default",
+        title: "Order was placed!",
+        body: cartItem.productTitle,
+      };
+
+      fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Accept-encoding": "gzip, deflate",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message),
+      });
+    }
   };
 }

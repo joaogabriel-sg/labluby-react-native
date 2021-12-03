@@ -1,6 +1,7 @@
 import { AnyAction } from "redux";
 import { ThunkAction } from "redux-thunk";
 
+import { registerForPushNotificationsAsync } from "../../shared/services";
 import { Product } from "../../shared/types";
 import { RootState } from "../types";
 
@@ -29,7 +30,15 @@ export function fetchProducts(): ThunkAction<
 
       const loadedProducts: Product[] = [];
       for (const key in responseData) {
-        loadedProducts.push({ ...responseData[key], id: key });
+        loadedProducts.push({
+          id: key,
+          title: responseData[key].title,
+          description: responseData[key].description,
+          imageUrl: responseData[key].imageUrl,
+          ownerId: responseData[key].ownerId,
+          price: responseData[key].price,
+          pushToken: responseData[key].ownerPushToken,
+        });
       }
 
       dispatch({
@@ -69,6 +78,11 @@ export function createProduct(
   price: number
 ): ThunkAction<void, RootState, unknown, AnyAction> {
   return async (dispatch, getState) => {
+    let pushToken: string | null = null;
+    await registerForPushNotificationsAsync().then((expoPushToken) => {
+      pushToken = expoPushToken || null;
+    });
+
     const { token, userId } = getState().auth;
 
     const response = await fetch(
@@ -84,6 +98,7 @@ export function createProduct(
           imageUrl,
           price,
           ownerId: userId,
+          ownerPushToken: pushToken,
         }),
       }
     );

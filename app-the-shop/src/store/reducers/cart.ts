@@ -24,6 +24,7 @@ export function cartReducer(
       const addedProduct: Product = action.product;
       const productTitle = addedProduct.title;
       const productPrice = addedProduct.price;
+      const productPushToken = addedProduct.pushToken;
 
       let updatedOrNewCartItem: CartItem;
 
@@ -34,6 +35,7 @@ export function cartReducer(
           productPrice,
           quantity: state.items[addedProduct.id].quantity + 1,
           sum: state.items[addedProduct.id].sum + productPrice,
+          productPushToken,
         };
       else
         updatedOrNewCartItem = {
@@ -42,6 +44,7 @@ export function cartReducer(
           productPrice,
           quantity: 1,
           sum: productPrice,
+          productPushToken,
         };
 
       return {

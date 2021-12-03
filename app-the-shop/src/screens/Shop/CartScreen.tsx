@@ -33,6 +33,7 @@ export function CartScreen() {
         productPrice: state.cart.items[key].productPrice,
         quantity: state.cart.items[key].quantity,
         sum: state.cart.items[key].productPrice,
+        productPushToken: state.cart.items[key].productPushToken,
       });
     }
     return transformedCartItems.sort((a, b) =>

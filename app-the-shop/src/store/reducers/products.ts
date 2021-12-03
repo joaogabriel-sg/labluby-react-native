@@ -42,6 +42,7 @@ export function productsReducer(
         price: state.userProducts[productIndex].price,
         imageUrl: action.productData.imageUrl,
         description: action.productData.description,
+        pushToken: action.userProducts[productIndex].pushToken,
       };
 
       const updatedUserProducts = [...state.userProducts];
